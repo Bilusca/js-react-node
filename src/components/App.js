@@ -1,28 +1,39 @@
 import React, {Component} from 'react';
-
+import axios from 'axios';
 import Header from './Header';
+import ContestPreview from './ContestPreview';
+
 
 class App extends Component {
     state = {
         headerMessage: "Naming Contests",
-        test: 42
+        contests: []
     }
 
     componentDidMount() {
-        console.log('did mount');
-        debugger;
+        axios.get('/api/contests')
+            .then(response => {
+                this.setState({
+                    contests: response.data.contests
+                })
+            })
+            .catch(console.error)  
     }
 
     componentWillUnmount() {
-        console.log('will unmount');
-        debugger;
+        
     }
 
     render() {
         return(
             <div className="App">
                 <Header message={this.state.headerMessage}/>
-                <div>{this.state.test}</div>
+                <div>
+                    {this.state.contests.map(contest => 
+                        <ContestPreview key={contest.id} {...contest} />
+                    )}
+                    
+                </div>
             </div>
         )
     }
